@@ -23,7 +23,7 @@ function btw-first-run-from-live () {
   ping -c 3 archlinux.org
   timedatectl
 
-  echo Wiping disks
+  echo Formatting disks
   mkfs.ext4 $BTW_ROOT
   mkswap $BTW_SWAP
 
@@ -35,31 +35,32 @@ function btw-first-run-from-live () {
   pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
   genfstab -U /mnt >> /mnt/etc/fstab
   # edit locale files
-  arch-chroot /mnt "ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime"
-  arch-chroot /mnt "hwclock --systohc"
-  arch-chroot /mnt "locale-gen"
-  arch-chroot /mnt "echo archforce >> /etc/hostname"
-  arch-chroot /mnt "passwd"
-  arch-chroot /mnt "grub-mkconfig -o /boot/grub/grub.cfg"
-  arch-chroot /mnt "grub-install --target=x86_64.efi --efi-directory=/boot --bootloader-id=GRUB"
+}
+
+function btw-inside-chroot () {
+  ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
+  hwclock --systohc
+  locale-gen
+  echo archforce >> /etc/hostname
+  passwd
+  grub-mkconfig -o /boot/grub/grub.cfg
+  grub-install --target=x86_64.efi --efi-directory=/boot --bootloader-id=GRUB
 }
 
 # After restarting inside new system
 function btw-root-setup () {
   # run as root
-  # add user
   useradd --create-home mrkosmici
   usermod -aG wheel mrkosmici
-
   # install yay AUR helper
   git clone https://aur.archlinux.org/yay-bin.git
   cd yay-bin
   makepkg -si
   rm -r yay-bin
-  btw-install-software
-  sudo -Hu mrkosmici btw-user-setup
-  sudo -Hu mrkosmici gh auth login
-  sudo -Hu mrkosmici btw-run-after-gh
+  # btw-install-software
+  # sudo -Hu mrkosmici btw-user-setup
+  # sudo -Hu mrkosmici gh auth login
+  # sudo -Hu mrkosmici btw-run-after-gh
 }
 
 function btw-user-setup () {
