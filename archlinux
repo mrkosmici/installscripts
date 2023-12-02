@@ -1,0 +1,65 @@
+#!/bin/sh
+
+# few functions with set of commands to be run in specific moments
+# during arch linux install
+
+function btw-run-from-live () {
+  # check network
+  pacstrap -K /mnt base linux linux-firmware vim networkmanager zsh fd git
+  locale-gen
+  passwd
+
+}
+
+function btw-grub-update-inside-chroot () {
+  grub-mkconfig -o /boot/grub/grub.cfg
+  grub-install --target=x86_64.efi --efi-directory=/boot --bootloader-id=GRUB
+}
+
+# After restarting inside new system
+function btw-root-run-after-install () {
+  # as root
+  pacman -Syu
+  # basic
+  pacman -S --noconfirm zsh base-devel vim tmux curl xorg-server xorg-init xorg-apps i3
+  # x
+  pacman -S --noconfirm xorg xev pacman-contrib
+  # few tools
+  pacman -S --noconfirm sshfs 
+  # audio 
+  pacman -S --noconfirm pipewire-pulse
+  #add user
+  useradd --create-home mrkosmici
+  usermod -aG sudo mrkosmici
+}
+
+function btw-user-omz () {
+
+  # ohmyzsh
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+  # change theme to powerlevel10k
+  sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
+
+}
+
+function btw-user-zsh-plugins () {
+  # Install Oh My Zsh plugins
+  git clone --depth=1 https://github.com/romkatv/zsh-prompt-benchmark.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-prompt-benchmark
+  git clone --depth=1 https://github.com/olets/zsh-abbr.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-abbr
+  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+}
+
+function btw-run-after-gh () {
+  cd $HOME/reps
+  gh repo clone dotfiles
+  chmod +x $HOME/reps/dotfiles/install
+  $HOME/reps/dotfiles/install
+  gh repo clone scripts
+  ln -s /home/mrkosmici/reps/scripts/add_daily_note.sh /home/mrkosmici/bin/daily
+  ln -s /home/mrkosmici/reps/scripts/conky-i3bar /home/mrkosmici/bin/conky-i3bar
+  ln -s /home/mrkosmici/reps/scripts/set-theme /home/mrkosmici/bin/set-theme
+  ln -s /home/mrkosmici/reps/scripts/toggler.sh /home/mrkosmici/bin/toggler
+  ln -s /home/mrkosmici/reps/scripts/volumelimiter /home/mrkosmici/bin/volumelimiter
+}
