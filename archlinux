@@ -16,14 +16,13 @@ echo swap $BTW_SWAP
 echo efi $BTW_EFI
 
 function btw-first-run-from-live () {
-  echo Setting keyboard 
-  loadkeys plugins
-  setfont ter-132b
+  echo Setting keyboard to pl
+  loadkeys pl
   echo Verifying boot mode...
   cat /sys/firmware/efi/fw_platform_size
   echo Checking internet...
   ip link
-  ping -c 5 archlinux.org
+  ping -c 3 archlinux.org
   timedatectl
 
   echo Wiping disks
