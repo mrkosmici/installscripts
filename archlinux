@@ -83,7 +83,15 @@ function btw-user-setup () {
 }
 
 function btw-install-software () {
-  yay -S acpi adwaita-qt5-git adwaita-qt6-git aisleriot alacritty alacritty-theme alacritty-themes android-tools atlauncher base base-devel bluez bluez-utils brightnessctl chromium clockify-cli-bin clockify-desktop cmatrix cmus conky cowsay debtap dmenu dmidecode dnsmasq efibootmgr exfatprogs fd feh firefox fzf gimp git github-cli gnome-keyring gnome-themes-extra gparted grub gtypist heroku-cli-bin htop hwinfo i3-wm i3blocks i3lock i3status ipython jq keepass lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-intel libhandy libreoffice-fresh linux linux-firmware lsd lutris maim man-db man-pages minecraft-launcher montserrat-otf mpv neofetch neovim networkmanager ngrok nodejs npm ntfs-3g obs-studio obsidian octopi openssh otf-raleway p7zip pacman-contrib pandoc-bin pcmanfm pipewire pipewire-pulse pixiecore-git prettyping pv pwgen pyenv python-poetry rclone reaper rsync scrcpy scribus scrot signal-desktop sl speedtest-cli sshfs sudo telegram-desktop testdisk texlive-binextra texlive-langpolish texlive-latex tldr tmux toilet translate-shell transmission-gtk tree ttf-dejavu ttf-hack-nerd ttf-meslo-nerd unzip veracrypt vim vulkan-intel wget wine xcape xclip xdotool xorg-server xorg-xclock xorg-xev xorg-xinit xorg-xinput xorg-xrandr xss-lock xterm yarn yay-bin yewtube-git yt-dlp zip zsh
+  yay -S acpi adwaita-qt5-git adwaita-qt6-git aisleriot alacritty alacritty-theme alacritty-themes android-tools base base-devel bluez bluez-utils brightnessctl chromium clockify-cli-bin clockify-desktop cmatrix cmus conky cowsay debtap dmenu dmidecode dnsmasq efibootmgr exfatprogs fd feh firefox fzf git github-cli gnome-keyring gnome-themes-extra gparted grub gtypist heroku-cli-bin htop hwinfo i3-wm i3blocks i3lock i3status ipython jq keepass libhandy libreoffice-fresh lsd maim man-db man-pages montserrat-otf mpv neofetch neovim networkmanager ngrok nodejs npm ntfs-3g obs-studio obsidian openssh otf-raleway p7zip pacman-contrib pandoc-bin pcmanfm pipewire pipewire-pulse pixiecore-git prettyping pv pwgen pyenv python-poetry rclone rsync scrcpy scribus scrot signal-desktop sl speedtest-cli sshfs sudo telegram-desktop testdisk texlive-binextra texlive-langpolish texlive-latex tldr tmux toilet translate-shell transmission-gtk tree ttf-dejavu ttf-hack-nerd ttf-meslo-nerd unzip veracrypt vim vulkan-intel wget wine xcape xclip xdotool xorg-server xorg-xclock xorg-xev xorg-xinit xorg-xinput xorg-xrandr xss-lock xterm yarn yay-bin yewtube-git yt-dlp zip zsh
+}
+
+function btw-install-games () {
+  yay -S atlauncher minecraft-launcher lutris lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-intel
+}
+
+function btw-install-media () {
+  yay -S reaper gimp scribus
 }
 
 function btw-run-after-gh () {
