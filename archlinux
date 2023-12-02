@@ -6,8 +6,6 @@
 # Usage
 #
 # BTW_ROOT=/dev/nvme0n1p7 BTW_SWAP=/dev/nvme0n1p6 BTW_EFI=/dev/nvme0n1p1 archlinux
-#
-# after running from usb, run first 
 
 echo running as $(whoami)
 fdisk -l 
@@ -37,13 +35,13 @@ function btw-first-run-from-live () {
   pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
   genfstab -U /mnt >> /mnt/etc/fstab
   # edit locale files
-  arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
-  arch-chroot /mnt hwclock --systohc
-  arch-chroot /mnt locale-gen
-  arch-chroot /mnt echo "archforce" >> /etc/hostname
-  arch-chroot /mnt passwd
-  arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
-  arch-chroot /mnt grub-install --target=x86_64.efi --efi-directory=/boot --bootloader-id=GRUB
+  arch-chroot /mnt "ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime"
+  arch-chroot /mnt "hwclock --systohc"
+  arch-chroot /mnt "locale-gen"
+  arch-chroot /mnt "echo archforce >> /etc/hostname"
+  arch-chroot /mnt "passwd"
+  arch-chroot /mnt "grub-mkconfig -o /boot/grub/grub.cfg"
+  arch-chroot /mnt "grub-install --target=x86_64.efi --efi-directory=/boot --bootloader-id=GRUB"
 }
 
 # After restarting inside new system
