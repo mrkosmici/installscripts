@@ -15,15 +15,34 @@ echo root $BTW_ROOT
 echo swap $BTW_SWAP
 echo efi $BTW_EFI
 
-function btw-run-from-live () {
-  pacstrap -K /mnt base linux linux-firmware vim networkmanager zsh git
-  # edit locale files
-  locale-gen
-  # set root password
-  passwd
-}
+function btw-first-run-from-live () {
+  echo Setting keyboard 
+  loadkeys plugins
+  setfont ter-132b
+  echo Verifying boot mode...
+  cat /sys/firmware/efi/fw_platform_size
+  echo Checking internet...
+  ip link
+  ping -c 5 archlinux.org
+  timedatectl
 
-function btw-chroot-grub () {
+  echo Wiping disks
+  mkfs.ext4 $BTW_ROOT
+  mkswap $BTW_SWAP
+
+  echo Mounting drives...
+  mount $BTW_ROOT /mnt
+  mount $BTW_EFI --mkdir /mnt/boot
+  swapon $BTW_SWAP
+
+  pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
+  genfstab -U /mnt >> /mnt/etc/fstab
+  # edit locale files
+  arch-chroot /mnt ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
+  arch-chroot /mnt hwclock --systohc
+  arch-chroot /mnt locale-gen
+  arch-chroot /mnt cat "archforce" >> /etc/hostname
+  arch-chroot /mnt passwd
   arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
   arch-chroot /mnt grub-install --target=x86_64.efi --efi-directory=/boot --bootloader-id=GRUB
 }
