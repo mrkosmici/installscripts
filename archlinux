@@ -43,8 +43,9 @@ function btw-inside-chroot () {
   locale-gen
   echo archforce >> /etc/hostname
   passwd
+  systemctl enable NetworkManager
   grub-mkconfig -o /boot/grub/grub.cfg
-  grub-install --target=x86_64.efi --efi-directory=/boot --bootloader-id=GRUB
+  grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 }
 
 # After restarting inside new system
@@ -53,14 +54,17 @@ function btw-root-setup () {
   useradd --create-home mrkosmici
   usermod -aG wheel mrkosmici
   # install yay AUR helper
-  git clone https://aur.archlinux.org/yay-bin.git
-  cd yay-bin
-  makepkg -si
-  rm -r yay-bin
   # btw-install-software
   # sudo -Hu mrkosmici btw-user-setup
   # sudo -Hu mrkosmici gh auth login
   # sudo -Hu mrkosmici btw-run-after-gh
+}
+
+function btw-install-yay () {
+  git clone https://aur.archlinux.org/yay-bin.git
+  cd yay-bin
+  makepkg -si
+  rm -r ../yay-bin
 }
 
 function btw-user-setup () {
