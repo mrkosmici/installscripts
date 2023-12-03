@@ -299,17 +299,17 @@ echo root $BTW_ROOT
 echo swap $BTW_SWAP
 echo efi $BTW_EFI
 
-read -p "btw-presetup"
+read "btw-presetup"
 btw-presetup
-read -p "btw-chroot-root"
+read "btw-chroot-root"
 btw-chroot-root
-read -p "btw-chroot-user"
+read "btw-chroot-user"
 btw-chroot-user
-read -p "btw-install"
+read "btw-install"
 btw-install
-read -p "btw-install-aur"
+read "btw-install-aur"
 btw-install-aur
-read -p "arch-chroot -u mrkosmici /mnt bash gh auth login"
+read "arch-chroot -u mrkosmici /mnt bash gh auth login"
 arch-chroot -u mrkosmici /mnt bash "gh auth login"
-read -p "btw-setup-after-gh"
+read "btw-setup-after-gh"
 btw-setup-after-gh
