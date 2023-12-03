@@ -234,24 +234,24 @@ EOF
 btw-chroot-user() {
   cat <<EOF > /mnt/home/mrkosmici/run-as-user
   #!/bin/bash
-  cd $HOME
+  cd \$HOME
   git clone https://aur.archlinux.org/yay-bin.git
-  cd $HOME/yay-bin
+  cd \$HOME/yay-bin
   makepkg -si
-  cd $HOME
-  rm -r $HOME/yay-bin
+  cd \$HOME
+  rm -r \$HOME/yay-bin
 
   # install ohmyzsh
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  sh -c "\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
   # change theme to powerlevel10k
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
   sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
   # Install Oh My Zsh plugins
-  git clone --depth=1 https://github.com/romkatv/zsh-prompt-benchmark.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-prompt-benchmark
-  git clone --depth=1 https://github.com/olets/zsh-abbr.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-abbr
-  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+  git clone --depth=1 https://github.com/romkatv/zsh-prompt-benchmark.git \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-prompt-benchmark
+  git clone --depth=1 https://github.com/olets/zsh-abbr.git \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-abbr
+  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 EOF
   echorun arch-chroot -u mrkosmici /mnt bash /home/mrkosmici/run-as-user
 }
@@ -293,15 +293,15 @@ btw-install-media () { yay -S reaper gimp scribus }
 
 btw-setup-after-gh () {
   cat <<EOF > /mnt/home/mrkosmici/run-after-gh
-  mkdir $HOME/reps
-  mkdir $HOME/bin
-  cd $HOME/reps
+  mkdir \$HOME/reps
+  mkdir \$HOME/bin
+  cd \$HOME/reps
   gh repo clone scripts
   gh repo clone dotfiles
-  cd $HOME/reps/dotfiles
+  cd \$HOME/reps/dotfiles
   git switch arch-t480s
-  chmod +x $HOME/reps/dotfiles/install
-  $HOME/reps/dotfiles/install
+  chmod +x \$HOME/reps/dotfiles/install
+  \$HOME/reps/dotfiles/install
   ln -s /home/mrkosmici/reps/scripts/add_daily_note.sh /home/mrkosmici/bin/daily
   ln -s /home/mrkosmici/reps/scripts/conky-i3bar /home/mrkosmici/bin/conky-i3bar
   ln -s /home/mrkosmici/reps/scripts/set-theme /home/mrkosmici/bin/set-theme
