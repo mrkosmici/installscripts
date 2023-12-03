@@ -234,6 +234,7 @@ EOF
 btw-chroot-user() {
   cat <<EOF > /mnt/home/mrkosmici/run-as-user
   #!/bin/bash
+  whoami
   cd /home/mrkosmici/
   git clone https://aur.archlinux.org/yay-bin.git
   cd /home/mrkosmici/yay-bin
