@@ -8,7 +8,7 @@
 # BTW_ROOT=/dev/nvme0n1p7 BTW_SWAP=/dev/nvme0n1p6 BTW_EFI=/dev/nvme0n1p1 archlinux
 
 echorun() {
-  echo "Running: $@"
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] run: $@"
   "$@"
 }
 
