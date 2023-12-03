@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # few functions with set of commands to be run in specific moments
 # during arch linux install
@@ -299,17 +299,21 @@ echo root $BTW_ROOT
 echo swap $BTW_SWAP
 echo efi $BTW_EFI
 
-read "btw-presetup"
+usage()  {
+
+  cat <<-EOF
+Usage
+
+you should call:
+
 btw-presetup
-read "btw-chroot-root"
 btw-chroot-root
-read "btw-chroot-user"
 btw-chroot-user
-read "btw-install"
 btw-install
-read "btw-install-aur"
 btw-install-aur
-read "arch-chroot -u mrkosmici /mnt bash gh auth login"
 arch-chroot -u mrkosmici /mnt bash "gh auth login"
-read "btw-setup-after-gh"
 btw-setup-after-gh
+EOF
+}
+
+usage
