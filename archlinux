@@ -7,6 +7,11 @@
 #
 # BTW_ROOT=/dev/nvme0n1p7 BTW_SWAP=/dev/nvme0n1p6 BTW_EFI=/dev/nvme0n1p1 archlinux
 
+echorun() {
+  echo "Running: $@"
+  "$@"
+}
+
 packages =  (
   acpi
   aisleriot
@@ -158,46 +163,40 @@ checkroot() {
 btw-presetup () { 
   # This should be started first
   checkroot
-  echo Setting keyboard to pl
-  loadkeys pl
+  echorun loadkeys pl
   echo Verifying boot mode...
-  cat /sys/firmware/efi/fw_platform_size
+  echorun cat /sys/firmware/efi/fw_platform_size
   echo Checking internet...
-  ip link
-  ping -c 3 archlinux.org
-  timedatectl
+  echorun ip link
+  echorun ping -c 1 archlinux.org
+  echorun timedatectl
 
   echo Ok, I will format disks
   echo root: $BTW_ROOT
   echo swap: $BTW_SWAP
-  echo efi:  $BTW_EFI
+  echo efi: $BTW_EFI
   echo ok?
 
   echo Formatting disks...
-  mkfs.ext4 $BTW_ROOT
-  mkswap $BTW_SWAP
+  echorun mkfs.ext4 $BTW_ROOT
+  echorun mkswap $BTW_SWAP
   echo Formatted
 
   echo Mounting drives...
-  mount $BTW_ROOT /mnt
-  mount $BTW_EFI --mkdir /mnt/boot
-  swapon $BTW_SWAP
-
-  echo going to
-  echo pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
-
-  pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
-  genfstab -U /mnt >> /mnt/etc/fstab
-  echo "genfstab -U /mnt"
-  genfstab -U /mnt
+  echorun mount $BTW_ROOT /mnt
+  echorun mount $BTW_EFI --mkdir /mnt/boot
+  echorun swapon $BTW_SWAP
+  echorun pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
+  echorun genfstab -U /mnt >> /mnt/etc/fstab
+  echorun genfstab -U /mnt
 
   # turn on color in pacman
-  sed -i 's/^#\(Color\)/\1/' /mnt/etc/pacman.conf
+  echorun sed -i 's/^#\(Color\)/\1/' /mnt/etc/pacman.conf
 }
 
 btw-chroot-root () {
   checkroot
-  arch-chroot /mnt bash <<-EOF
+  echorun arch-chroot /mnt bash <<-EOF
   ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
   hwclock --systohc
   locale-gen
@@ -222,7 +221,7 @@ btw-chroot-root () {
 }
 
 btw-chroot-user() {
-  arch-chroot -u mrkosmici /mnt bash <<-EOF
+  echorun arch-chroot -u mrkosmici /mnt bash <<-EOF
   git clone https://aur.archlinux.org/yay-bin.git
   cd yay-bin
   makepkg -si
@@ -277,24 +276,24 @@ btw-install-games () { yay -S atlauncher minecraft-launcher lutris lib32-mesa li
 btw-install-media () { yay -S reaper gimp scribus }
 
 btw-setup-after-gh () {
-  mkdir $HOME/reps
-  mkdir $HOME/bin
-  cd $HOME/reps
-  gh repo clone scripts
-  gh repo clone dotfiles
-  cd $HOME/reps/dotfiles
-  git switch arch-t480s
-  chmod +x $HOME/reps/dotfiles/install
-  $HOME/reps/dotfiles/install
-  ln -s /home/mrkosmici/reps/scripts/add_daily_note.sh /home/mrkosmici/bin/daily
-  ln -s /home/mrkosmici/reps/scripts/conky-i3bar /home/mrkosmici/bin/conky-i3bar
-  ln -s /home/mrkosmici/reps/scripts/set-theme /home/mrkosmici/bin/set-theme
-  ln -s /home/mrkosmici/reps/scripts/toggler.sh /home/mrkosmici/bin/toggler
-  ln -s /home/mrkosmici/reps/scripts/volumelimiter /home/mrkosmici/bin/volumelimiter
+  echorun mkdir $HOME/reps
+  echorun mkdir $HOME/bin
+  echorun cd $HOME/reps
+  echorun gh repo clone scripts
+  echorun gh repo clone dotfiles
+  echorun cd $HOME/reps/dotfiles
+  echorun git switch arch-t480s
+  echorun chmod +x $HOME/reps/dotfiles/install
+  echorun $HOME/reps/dotfiles/install
+  echorun ln -s /home/mrkosmici/reps/scripts/add_daily_note.sh /home/mrkosmici/bin/daily
+  echorun ln -s /home/mrkosmici/reps/scripts/conky-i3bar /home/mrkosmici/bin/conky-i3bar
+  echorun ln -s /home/mrkosmici/reps/scripts/set-theme /home/mrkosmici/bin/set-theme
+  echorun ln -s /home/mrkosmici/reps/scripts/toggler.sh /home/mrkosmici/bin/toggler
+  echorun ln -s /home/mrkosmici/reps/scripts/volumelimiter /home/mrkosmici/bin/volumelimiter
 }
 
 echo running as $(whoami)
-fdisk -l 
+echorun fdisk -l 
 echo root $BTW_ROOT
 echo swap $BTW_SWAP
 echo efi $BTW_EFI
