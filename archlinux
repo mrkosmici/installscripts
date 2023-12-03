@@ -24,17 +24,32 @@ btw-presetup () {
   ping -c 3 archlinux.org
   timedatectl
 
-  echo Formatting disks
+  echo Ok, I will format disks
+  echo root: $BTW_ROOT
+  echo swap: $BTW_SWAP
+  echo efi:  $BTW_EFI
+  echo ok?
+  read -n 1 -s -r -p "Press any key to continue"
+
+  echo Formatting disks...
   mkfs.ext4 $BTW_ROOT
   mkswap $BTW_SWAP
+  echo Formatted
 
   echo Mounting drives...
   mount $BTW_ROOT /mnt
   mount $BTW_EFI --mkdir /mnt/boot
   swapon $BTW_SWAP
 
+  echo going to
+  echo pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
+  read -n 1 -s -r -p "Press any key to continue"
+
   pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
   genfstab -U /mnt >> /mnt/etc/fstab
+  echo "genfstab -U /mnt"
+  genfstab -U /mnt
+  read -n 1 -s -r -p "Press any key to continue"
 
   # turn on color in pacman
   sed -i 's/^#\(Color\)/\1/' /mnt/etc/pacman.conf
@@ -151,8 +166,18 @@ echo swap $BTW_SWAP
 echo efi $BTW_EFI
 
 btw-presetup
+echo next I will run btw-chroot-root
+read -n 1 -s -r -p "Press any key to continue"
 btw-chroot-root
+echo next I will run btw-chroot-user 
+read -n 1 -s -r -p "Press any key to continue"
 btw-chroot-user
+echo next I will run btw-yay-install-software
+read -n 1 -s -r -p "Press any key to continue"
 btw-yay-install-software
+echo "next I will chroot again"
+read -n 1 -s -r -p "Press any key to continue"
 arch-chroot -u mrkosmici /mnt bash "gh auth login"
+echo "gh working?"
+read -n 1 -s -r -p "Press any key to continue"
 btw-setup-after-gh
