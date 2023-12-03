@@ -164,6 +164,8 @@ echo root $BTW_ROOT
 echo swap $BTW_SWAP
 echo efi $BTW_EFI
 
+echo next I will run btw-presetup
+read -n 1 -s -r -p "Press any key to continue"
 btw-presetup
 echo next I will run btw-chroot-root
 read -n 1 -s -r -p "Press any key to continue"
