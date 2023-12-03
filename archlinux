@@ -172,7 +172,6 @@ btw-presetup () {
   echo swap: $BTW_SWAP
   echo efi:  $BTW_EFI
   echo ok?
-  read -p "Press any key to continue"
 
   echo Formatting disks...
   mkfs.ext4 $BTW_ROOT
@@ -186,13 +185,11 @@ btw-presetup () {
 
   echo going to
   echo pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
-  read -p "Press any key to continue"
 
   pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
   genfstab -U /mnt >> /mnt/etc/fstab
   echo "genfstab -U /mnt"
   genfstab -U /mnt
-  read -p "Press any key to continue"
 
   # turn on color in pacman
   sed -i 's/^#\(Color\)/\1/' /mnt/etc/pacman.conf
