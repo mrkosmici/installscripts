@@ -205,6 +205,7 @@ btw-chroot-root () {
   hwclock --systohc
   locale-gen
   echo archforce >> /etc/hostname
+  echo new root password
   passwd
   systemctl enable NetworkManager
   grub-mkconfig -o /boot/grub/grub.cfg
@@ -212,6 +213,7 @@ btw-chroot-root () {
   # add user
   useradd --create-home mrkosmici
   usermod -aG wheel mrkosmici
+  echo new password for you, give me
   passwd mrkosmici
 
   # install yay AUR helper
