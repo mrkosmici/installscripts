@@ -302,6 +302,7 @@ you should call:
 btw-presetup
 btw-chroot-root
 btw-chroot-user
+makecapslockgreatagain
 btw-install
 btw-install-aur
 arch-chroot -u mrkosmici /mnt bash "gh auth login"
@@ -312,13 +313,13 @@ EOF
 usage
 
 echorun btw-presetup
-echorun btw-chroot-root
-echorun btw-chroot-user
-echorun makecapslockgreatagain
-echorun btw-install
-echorun btw-install-aur
-arch-chroot -u mrkosmici /mnt bash "gh auth login"
-echorun btw-setup-after-gh
+# echorun btw-chroot-root
+# echorun btw-chroot-user
+# echorun makecapslockgreatagain
+# echorun btw-install
+# echorun btw-install-aur
+# arch-chroot -u mrkosmici /mnt bash "gh auth login"
+# echorun btw-setup-after-gh
 
   # sudo -Hu mrkosmici btw-user-setup
   # sudo -Hu mrkosmici gh auth login
