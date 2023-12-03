@@ -275,7 +275,7 @@ btw-install-games () { yay -S atlauncher minecraft-launcher lutris lib32-mesa li
 btw-install-media () { yay -S reaper gimp scribus }
 
 btw-setup-after-gh () {
-  arch-chroot -u mrkosmici /mnt bash -c <<EOF
+  cat <<EOF > /mnt/home/mrkosmici/run-after-gh
   mkdir $HOME/reps
   mkdir $HOME/bin
   cd $HOME/reps
