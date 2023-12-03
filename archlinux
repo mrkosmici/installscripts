@@ -233,12 +233,13 @@ EOF
 
 btw-chroot-user() {
   cat <<EOF > /mnt/home/mrkosmici/run-as-user
+  #!/bin/bash
   cd $HOME
   git clone https://aur.archlinux.org/yay-bin.git
   cd $HOME/yay-bin
   makepkg -si
   cd $HOME
-  rm -r yay-bin
+  rm -r $HOME/yay-bin
 
   # install ohmyzsh
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -335,11 +336,11 @@ EOF
 
 usage
 
-echorun btw-presetup
-echorun btw-chroot-root
-echorun btw-chroot-user
-echorun makecapslockgreatagain
-echorun btw-install
+# echorun btw-presetup
+# echorun btw-chroot-root
+# echorun btw-chroot-user
+# echorun makecapslockgreatagain
+# echorun btw-install
 # echorun btw-install-aur
 # arch-chroot -u mrkosmici /mnt bash "gh auth login"
 # echorun btw-setup-after-gh
