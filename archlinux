@@ -296,31 +296,23 @@ btw-setup-after-gh () {
   ln -s /home/mrkosmici/reps/scripts/volumelimiter /home/mrkosmici/bin/volumelimiter
 }
 
-
 echo running as $(whoami)
 fdisk -l 
 echo root $BTW_ROOT
 echo swap $BTW_SWAP
 echo efi $BTW_EFI
 
-echo next I will run btw-presetup
-read -p "Press any key to continue"
+read -p "btw-presetup"
 btw-presetup
-echo next I will run btw-chroot-root
-read -p "Press any key to continue"
+read -p "btw-chroot-root"
 btw-chroot-root
-echo next I will run btw-chroot-user 
-read -p "Press any key to continue"
+read -p "btw-chroot-user"
 btw-chroot-user
-echo next I will run btw-install
-read -p "Press any key to continue"
+read -p "btw-install"
 btw-install
-echo next I will run btw-install-aur
-read -p "Press any key to continue"
+read -p "btw-install-aur"
 btw-install-aur
-echo "next I will chroot again"
-read -p "Press any key to continue"
+read -p "arch-chroot -u mrkosmici /mnt bash gh auth login"
 arch-chroot -u mrkosmici /mnt bash "gh auth login"
-echo "gh working?"
-read -p "Press any key to continue"
+read -p "btw-setup-after-gh"
 btw-setup-after-gh
