@@ -77,6 +77,35 @@ function btw-install-yay () {
   rm -r ../yay-bin
 }
 
+makecapslockgreatagain() {
+  cat <<EOF > /usr/share/X11/xkb/symbols/pl_caps
+partial alphanumeric_keys
+
+xkb_symbols "hjkl" {
+    // make capslock a level5 shift modifier
+    include "level5(caps_switch)"
+
+    // Make the following keys capable of using eight levels.
+    key.type[Group1] = "EIGHT_LEVEL";
+
+    key <AD07>	{ [ NoSymbol, NoSymbol, NoSymbol, NoSymbol, Prior, Prior ]	};
+    key <AD08>	{ [ NoSymbol, NoSymbol, NoSymbol, NoSymbol, Home, Home ]	};
+    key <AD09>	{ [ NoSymbol, NoSymbol, NoSymbol, NoSymbol, End, End ]	};
+    key <AD10>	{ [ NoSymbol, NoSymbol, NoSymbol, NoSymbol, Next, Next ]	};
+
+    // caps + hjkl
+    key <AC06> { [ NoSymbol, NoSymbol, NoSymbol, NoSymbol, Left, Left ] };
+    key <AC07> { [ NoSymbol, NoSymbol, NoSymbol, NoSymbol, Down, Down ] };
+    key <AC08> { [ NoSymbol, NoSymbol, NoSymbol, NoSymbol, Up, Up ] };
+    key <AC09> { [ NoSymbol, NoSymbol, NoSymbol, NoSymbol, Right, Right ] };
+};
+
+xkb_symbols "x220" {
+    key <LSGT>  { [ Insert, Insert, Insert, Insert ] };
+};
+EOF
+}
+
 function btw-user-setup () {
   # install ohmyzsh
   sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
