@@ -46,7 +46,7 @@ function btw-first-run-from-live () {
 
 function btw-inside-chroot () {
   checkroot
-
+  arch-chroot /mnt bash <<-EOF
   ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
   hwclock --systohc
   locale-gen
@@ -55,12 +55,13 @@ function btw-inside-chroot () {
   systemctl enable NetworkManager
   grub-mkconfig -o /boot/grub/grub.cfg
   grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+  EOF
 }
 
 # After restarting inside new system
 function btw-root-setup () { 
   checkroot
-
+  arch-chroot /mnt bash <<-EOF
   useradd --create-home mrkosmici
   usermod -aG wheel mrkosmici
   # install yay AUR helper
@@ -68,6 +69,7 @@ function btw-root-setup () {
   # sudo -Hu mrkosmici btw-user-setup
   # sudo -Hu mrkosmici gh auth login
   # sudo -Hu mrkosmici btw-run-after-gh
+  EOF
 }
 
 function btw-install-yay () {
@@ -75,6 +77,11 @@ function btw-install-yay () {
   cd yay-bin
   makepkg -si
   rm -r ../yay-bin
+}
+
+setoptions() {
+  # uncomment color in pacman.conf
+  sed -i 's/^#\(Color\)/\1/' /mnt/etc/pacman.conf
 }
 
 makecapslockgreatagain() {
