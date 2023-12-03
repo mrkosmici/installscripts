@@ -234,18 +234,18 @@ EOF
 btw-chroot-user() {
   cat <<EOF > /mnt/home/mrkosmici/run-as-user
   #!/bin/bash
-  cd \$HOME
+  cd /home/mrkosmici/
   git clone https://aur.archlinux.org/yay-bin.git
-  cd \$HOME/yay-bin
+  cd /home/mrkosmici/yay-bin
   makepkg -si
-  cd \$HOME
-  rm -r \$HOME/yay-bin
+  cd /home/mrkosmici/
+  rm -rf yay-bin
 
   # install ohmyzsh
   sh -c "\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
   # change theme to powerlevel10k
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \${ZSH_CUSTOM:-\$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
   sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
   # Install Oh My Zsh plugins
   git clone --depth=1 https://github.com/romkatv/zsh-prompt-benchmark.git \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-prompt-benchmark
