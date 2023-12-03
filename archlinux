@@ -165,9 +165,11 @@ btw-presetup () {
   echorun loadkeys pl
   echo "Verifying boot mode..."
   echorun cat /sys/firmware/efi/fw_platform_size
+  sleep 3
   echo "Checking internet..."
   echorun ip link
   echorun ping -c 1 archlinux.org
+  sleep 3
   echorun timedatectl
 
   echo "Ok, I will format disks"
@@ -176,14 +178,19 @@ btw-presetup () {
   echo efi: $BTW_EFI
 
   echo "Formatting disks..."
+  sleep 3
   echorun mkfs.ext4 $BTW_ROOT
   echorun mkswap $BTW_SWAP
   echo "Formatted"
 
   echo "Mounting drives..."
+  sleep 3
   echorun mount $BTW_ROOT /mnt
   echorun mount $BTW_EFI --mkdir /mnt/boot
   echorun swapon $BTW_SWAP
+
+  echo "Pacstrapping basic packages"
+  sleep 3
   echorun pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git grub efibootmgr
   echorun genfstab -U /mnt >> /mnt/etc/fstab
   echorun genfstab -U /mnt
@@ -261,8 +268,8 @@ xkb_symbols "x220" {
 EOF
 }
 
-btw-install () { pacstrap /mnt ${packages[@]} }
-btw-install-aur() { arch-chroot -u mrkosmici /mnt bash yay -S --noconfirm "${aurpackages[@]}" }
+btw-install () { echorun pacstrap /mnt ${packages[@]} }
+btw-install-aur() { echorun arch-chroot -u mrkosmici /mnt bash yay -S --noconfirm "${aurpackages[@]}" }
 
 btw-install-games () { yay -S atlauncher minecraft-launcher lutris lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-intel }
 btw-install-media () { yay -S reaper gimp scribus }
@@ -313,7 +320,7 @@ EOF
 usage
 
 echorun btw-presetup
-# echorun btw-chroot-root
+echorun btw-chroot-root
 # echorun btw-chroot-user
 # echorun makecapslockgreatagain
 # echorun btw-install
