@@ -314,10 +314,11 @@ usage
 echorun btw-presetup
 echorun btw-chroot-root
 echorun btw-chroot-user
-# btw-install
-# btw-install-aur
-# arch-chroot -u mrkosmici /mnt bash "gh auth login"
-# btw-setup-after-gh
+echorun makecapslockgreatagain
+echorun btw-install
+echorun btw-install-aur
+arch-chroot -u mrkosmici /mnt bash "gh auth login"
+echorun btw-setup-after-gh
 
   # sudo -Hu mrkosmici btw-user-setup
   # sudo -Hu mrkosmici gh auth login
