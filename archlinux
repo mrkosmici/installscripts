@@ -7,6 +7,154 @@
 #
 # BTW_ROOT=/dev/nvme0n1p7 BTW_SWAP=/dev/nvme0n1p6 BTW_EFI=/dev/nvme0n1p1 archlinux
 
+packages =  (
+acpi
+aisleriot
+alacritty
+android-tools
+base
+base-devel
+bluez
+bluez-utils
+brightnessctl
+chromium
+cmatrix
+cmus
+conky
+cowsay
+dmenu
+dmidecode
+dnsmasq
+efibootmgr
+exfatprogs
+fd
+feh
+firefox
+fzf
+gimp
+git
+github-cli
+gnome-keyring
+gnome-themes-extra
+gparted
+grub
+htop
+hwinfo
+i3-wm
+i3blocks
+i3lock
+i3status
+ipython
+jq
+keepass
+lib32-mesa
+lib32-vulkan-icd-loader
+lib32-vulkan-intel
+libhandy
+libreoffice-fresh
+linux
+linux-firmware
+lsd
+lutris
+maim
+man-db
+man-pages
+mpv
+neofetch
+neovim
+networkmanager
+nodejs
+npm
+ntfs-3g
+obs-studio
+obsidian
+openssh
+p7zip
+pacman-contrib
+pcmanfm
+pipewire
+pipewire-pulse
+prettyping
+pv
+pwgen
+pyenv
+python-poetry
+rclone
+reaper
+rsync
+scrcpy
+scribus
+scrot
+signal-desktop
+sl
+speedtest-cli
+sshfs
+sudo
+telegram-desktop
+testdisk
+texlive-binextra
+texlive-langpolish
+texlive-latex
+tldr
+tmux
+toilet
+translate-shell
+transmission-gtk
+tree
+ttf-dejavu
+ttf-hack-nerd
+ttf-meslo-nerd
+unzip
+veracrypt
+vim
+vulkan-intel
+wget
+wine
+xcape
+xclip
+xdotool
+xorg-server
+xorg-xclock
+xorg-xev
+xorg-xinit
+xorg-xinput
+xorg-xrandr
+xss-lock
+xterm
+yarn
+yt-dlp
+zip
+zsh
+
+
+)
+
+
+aurpackages = (
+  alacritty-theme
+  alacritty-themes
+  atlauncher
+  clockify-cli-bin
+  clockify-desktop
+  debtap
+  gtypist
+  heroku-cli-bin
+  minecraft-launcher
+  montserrat-otf
+  ngrok
+  octopi
+  otf-raleway
+  pandoc-bin
+  pixiecore-git
+  python-backcall
+  python-pafy-git
+  vtop
+  woeusb
+  yay-bin
+  yewtube-git
+  youtube-dl
+  youtube-search-python-git
+)
 
 checkroot() {
   (( EUID == 0 )) || die 'need root privileges'
@@ -128,17 +276,11 @@ xkb_symbols "x220" {
 EOF
 }
 
-function btw-yay-install-software () {
-  arch-chroot -u mrkosmici /mnt bash "yay -S acpi adwaita-qt5-git adwaita-qt6-git aisleriot alacritty alacritty-theme alacritty-themes android-tools base base-devel bluez bluez-utils brightnessctl chromium clockify-cli-bin clockify-desktop cmatrix cmus conky cowsay debtap dmenu dmidecode dnsmasq efibootmgr exfatprogs fd feh firefox fzf git github-cli gnome-keyring gnome-themes-extra gparted grub gtypist heroku-cli-bin htop hwinfo i3-wm i3blocks i3lock i3status ipython jq keepass libhandy libreoffice-fresh lsd maim man-db man-pages montserrat-otf mpv neofetch neovim networkmanager ngrok nodejs npm ntfs-3g obs-studio obsidian openssh otf-raleway p7zip pacman-contrib pandoc-bin pcmanfm pipewire pipewire-pulse pixiecore-git prettyping pv pwgen pyenv python-poetry rclone rsync scrcpy scribus scrot signal-desktop sl speedtest-cli sshfs sudo telegram-desktop testdisk texlive-binextra texlive-langpolish texlive-latex tldr tmux toilet translate-shell transmission-gtk tree ttf-dejavu ttf-hack-nerd ttf-meslo-nerd unzip veracrypt vim vulkan-intel wget wine xcape xclip xdotool xorg-server xorg-xclock xorg-xev xorg-xinit xorg-xinput xorg-xrandr xss-lock xterm yarn yay-bin yewtube-git yt-dlp zip zsh"
-}
+btw-install () { pacstrap /mnt ${packages[@]} }
+btw-install-aur() { arch-chroot -u mrkosmici /mnt bash yay -S --noconfirm "${aurpackages[@]}" }
 
-function btw-install-games () {
-  yay -S atlauncher minecraft-launcher lutris lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-intel
-}
-
-function btw-install-media () {
-  yay -S reaper gimp scribus
-}
+btw-install-games () { yay -S atlauncher minecraft-launcher lutris lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-intel }
+btw-install-media () { yay -S reaper gimp scribus }
 
 btw-setup-after-gh () {
   mkdir $HOME/reps
@@ -173,9 +315,12 @@ btw-chroot-root
 echo next I will run btw-chroot-user 
 read -n 1 -s -r -p "Press any key to continue"
 btw-chroot-user
-echo next I will run btw-yay-install-software
+echo next I will run btw-install
 read -n 1 -s -r -p "Press any key to continue"
-btw-yay-install-software
+btw-install
+echo next I will run btw-install-aur
+read -n 1 -s -r -p "Press any key to continue"
+btw-install-aur
 echo "next I will chroot again"
 read -n 1 -s -r -p "Press any key to continue"
 arch-chroot -u mrkosmici /mnt bash "gh auth login"
