@@ -195,7 +195,7 @@ btw-presetup () {
 
 btw-chroot-root () {
   checkroot
-  echorun arch-chroot /mnt bash <<-EOF
+  arch-chroot /mnt bash <<EOF
   ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
   hwclock --systohc
   locale-gen
@@ -208,7 +208,7 @@ btw-chroot-root () {
   # add user
   useradd --create-home mrkosmici
   usermod -aG wheel mrkosmici
-  echo new password for you, give me
+  echo new password for you give me
   passwd mrkosmici
 
   # install yay AUR helper
@@ -216,11 +216,11 @@ btw-chroot-root () {
   # sudo -Hu mrkosmici btw-user-setup
   # sudo -Hu mrkosmici gh auth login
   # sudo -Hu mrkosmici btw-run-after-gh
-  EOF
+EOF
 }
 
 btw-chroot-user() {
-  echorun arch-chroot -u mrkosmici /mnt bash <<-EOF
+  arch-chroot -u mrkosmici /mnt bash <<EOF
   git clone https://aur.archlinux.org/yay-bin.git
   cd yay-bin
   makepkg -si
@@ -236,7 +236,7 @@ btw-chroot-user() {
   git clone --depth=1 https://github.com/olets/zsh-abbr.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-abbr
   git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
   git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-  EOF
+EOF
 }
 
 makecapslockgreatagain() {
@@ -315,3 +315,11 @@ EOF
 }
 
 usage
+
+btw-presetup
+# btw-chroot-root
+# btw-chroot-user
+# btw-install
+# btw-install-aur
+# arch-chroot -u mrkosmici /mnt bash "gh auth login"
+# btw-setup-after-gh
