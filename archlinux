@@ -7,19 +7,13 @@
 #
 # BTW_ROOT=/dev/nvme0n1p7 BTW_SWAP=/dev/nvme0n1p6 BTW_EFI=/dev/nvme0n1p1 archlinux
 
-set -e
-
-echo running as $(whoami)
-fdisk -l 
-echo root $BTW_ROOT
-echo swap $BTW_SWAP
-echo efi $BTW_EFI
 
 checkroot() {
   (( EUID == 0 )) || die 'need root privileges'
 }
 
-function btw-first-run-from-live () { 
+btw-presetup () { 
+  # This should be started first
   checkroot
   echo Setting keyboard to pl
   loadkeys pl
@@ -41,10 +35,12 @@ function btw-first-run-from-live () {
 
   pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
   genfstab -U /mnt >> /mnt/etc/fstab
-  # edit locale files
+
+  # turn on color in pacman
+  sed -i 's/^#\(Color\)/\1/' /mnt/etc/pacman.conf
 }
 
-function btw-inside-chroot () {
+btw-chroot-root () {
   checkroot
   arch-chroot /mnt bash <<-EOF
   ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
@@ -55,15 +51,11 @@ function btw-inside-chroot () {
   systemctl enable NetworkManager
   grub-mkconfig -o /boot/grub/grub.cfg
   grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
-  EOF
-}
-
-# After restarting inside new system
-function btw-root-setup () { 
-  checkroot
-  arch-chroot /mnt bash <<-EOF
+  # add user
   useradd --create-home mrkosmici
   usermod -aG wheel mrkosmici
+  passwd mrkosmici
+
   # install yay AUR helper
   # btw-install-software
   # sudo -Hu mrkosmici btw-user-setup
@@ -72,16 +64,24 @@ function btw-root-setup () {
   EOF
 }
 
-function btw-install-yay () {
+btw-chroot-user() {
+  arch-chroot -u mrkosmici /mnt bash <<-EOF
   git clone https://aur.archlinux.org/yay-bin.git
   cd yay-bin
   makepkg -si
   rm -r ../yay-bin
-}
 
-setoptions() {
-  # uncomment color in pacman.conf
-  sed -i 's/^#\(Color\)/\1/' /mnt/etc/pacman.conf
+  # install ohmyzsh
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  # change theme to powerlevel10k
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+  sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
+  # Install Oh My Zsh plugins
+  git clone --depth=1 https://github.com/romkatv/zsh-prompt-benchmark.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-prompt-benchmark
+  git clone --depth=1 https://github.com/olets/zsh-abbr.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-abbr
+  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+  EOF
 }
 
 makecapslockgreatagain() {
@@ -113,21 +113,8 @@ xkb_symbols "x220" {
 EOF
 }
 
-function btw-user-setup () {
-  # install ohmyzsh
-  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-  # change theme to powerlevel10k
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-  sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
-  # Install Oh My Zsh plugins
-  git clone --depth=1 https://github.com/romkatv/zsh-prompt-benchmark.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-prompt-benchmark
-  git clone --depth=1 https://github.com/olets/zsh-abbr.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-abbr
-  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-}
-
-function btw-install-software () {
-  yay -S acpi adwaita-qt5-git adwaita-qt6-git aisleriot alacritty alacritty-theme alacritty-themes android-tools base base-devel bluez bluez-utils brightnessctl chromium clockify-cli-bin clockify-desktop cmatrix cmus conky cowsay debtap dmenu dmidecode dnsmasq efibootmgr exfatprogs fd feh firefox fzf git github-cli gnome-keyring gnome-themes-extra gparted grub gtypist heroku-cli-bin htop hwinfo i3-wm i3blocks i3lock i3status ipython jq keepass libhandy libreoffice-fresh lsd maim man-db man-pages montserrat-otf mpv neofetch neovim networkmanager ngrok nodejs npm ntfs-3g obs-studio obsidian openssh otf-raleway p7zip pacman-contrib pandoc-bin pcmanfm pipewire pipewire-pulse pixiecore-git prettyping pv pwgen pyenv python-poetry rclone rsync scrcpy scribus scrot signal-desktop sl speedtest-cli sshfs sudo telegram-desktop testdisk texlive-binextra texlive-langpolish texlive-latex tldr tmux toilet translate-shell transmission-gtk tree ttf-dejavu ttf-hack-nerd ttf-meslo-nerd unzip veracrypt vim vulkan-intel wget wine xcape xclip xdotool xorg-server xorg-xclock xorg-xev xorg-xinit xorg-xinput xorg-xrandr xss-lock xterm yarn yay-bin yewtube-git yt-dlp zip zsh
+function btw-yay-install-software () {
+  arch-chroot -u mrkosmici /mnt bash "yay -S acpi adwaita-qt5-git adwaita-qt6-git aisleriot alacritty alacritty-theme alacritty-themes android-tools base base-devel bluez bluez-utils brightnessctl chromium clockify-cli-bin clockify-desktop cmatrix cmus conky cowsay debtap dmenu dmidecode dnsmasq efibootmgr exfatprogs fd feh firefox fzf git github-cli gnome-keyring gnome-themes-extra gparted grub gtypist heroku-cli-bin htop hwinfo i3-wm i3blocks i3lock i3status ipython jq keepass libhandy libreoffice-fresh lsd maim man-db man-pages montserrat-otf mpv neofetch neovim networkmanager ngrok nodejs npm ntfs-3g obs-studio obsidian openssh otf-raleway p7zip pacman-contrib pandoc-bin pcmanfm pipewire pipewire-pulse pixiecore-git prettyping pv pwgen pyenv python-poetry rclone rsync scrcpy scribus scrot signal-desktop sl speedtest-cli sshfs sudo telegram-desktop testdisk texlive-binextra texlive-langpolish texlive-latex tldr tmux toilet translate-shell transmission-gtk tree ttf-dejavu ttf-hack-nerd ttf-meslo-nerd unzip veracrypt vim vulkan-intel wget wine xcape xclip xdotool xorg-server xorg-xclock xorg-xev xorg-xinit xorg-xinput xorg-xrandr xss-lock xterm yarn yay-bin yewtube-git yt-dlp zip zsh"
 }
 
 function btw-install-games () {
@@ -138,7 +125,7 @@ function btw-install-media () {
   yay -S reaper gimp scribus
 }
 
-function btw-run-after-gh () {
+btw-setup-after-gh () {
   mkdir $HOME/reps
   mkdir $HOME/bin
   cd $HOME/reps
@@ -154,3 +141,18 @@ function btw-run-after-gh () {
   ln -s /home/mrkosmici/reps/scripts/toggler.sh /home/mrkosmici/bin/toggler
   ln -s /home/mrkosmici/reps/scripts/volumelimiter /home/mrkosmici/bin/volumelimiter
 }
+
+set -e
+
+echo running as $(whoami)
+fdisk -l 
+echo root $BTW_ROOT
+echo swap $BTW_SWAP
+echo efi $BTW_EFI
+
+btw-presetup
+btw-chroot-root
+btw-chroot-user
+btw-yay-install-software
+arch-chroot -u mrkosmici /mnt bash "gh auth login"
+btw-setup-after-gh
