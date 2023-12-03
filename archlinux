@@ -157,7 +157,6 @@ btw-setup-after-gh () {
   ln -s /home/mrkosmici/reps/scripts/volumelimiter /home/mrkosmici/bin/volumelimiter
 }
 
-set -e
 
 echo running as $(whoami)
 fdisk -l 
