@@ -8,125 +8,120 @@
 # BTW_ROOT=/dev/nvme0n1p7 BTW_SWAP=/dev/nvme0n1p6 BTW_EFI=/dev/nvme0n1p1 archlinux
 
 packages =  (
-acpi
-aisleriot
-alacritty
-android-tools
-base
-base-devel
-bluez
-bluez-utils
-brightnessctl
-chromium
-cmatrix
-cmus
-conky
-cowsay
-dmenu
-dmidecode
-dnsmasq
-efibootmgr
-exfatprogs
-fd
-feh
-firefox
-fzf
-gimp
-git
-github-cli
-gnome-keyring
-gnome-themes-extra
-gparted
-grub
-htop
-hwinfo
-i3-wm
-i3blocks
-i3lock
-i3status
-ipython
-jq
-keepass
-lib32-mesa
-lib32-vulkan-icd-loader
-lib32-vulkan-intel
-libhandy
-libreoffice-fresh
-linux
-linux-firmware
-lsd
-lutris
-maim
-man-db
-man-pages
-mpv
-neofetch
-neovim
-networkmanager
-nodejs
-npm
-ntfs-3g
-obs-studio
-obsidian
-openssh
-p7zip
-pacman-contrib
-pcmanfm
-pipewire
-pipewire-pulse
-prettyping
-pv
-pwgen
-pyenv
-python-poetry
-rclone
-reaper
-rsync
-scrcpy
-scribus
-scrot
-signal-desktop
-sl
-speedtest-cli
-sshfs
-sudo
-telegram-desktop
-testdisk
-texlive-binextra
-texlive-langpolish
-texlive-latex
-tldr
-tmux
-toilet
-translate-shell
-transmission-gtk
-tree
-ttf-dejavu
-ttf-hack-nerd
-ttf-meslo-nerd
-unzip
-veracrypt
-vim
-vulkan-intel
-wget
-wine
-xcape
-xclip
-xdotool
-xorg-server
-xorg-xclock
-xorg-xev
-xorg-xinit
-xorg-xinput
-xorg-xrandr
-xss-lock
-xterm
-yarn
-yt-dlp
-zip
-zsh
-
-
+  acpi
+  aisleriot
+  alacritty
+  android-tools
+  base
+  base-devel
+  bluez
+  bluez-utils
+  brightnessctl
+  chromium
+  cmatrix
+  cmus
+  conky
+  cowsay
+  dmenu
+  dmidecode
+  dnsmasq
+  efibootmgr
+  exfatprogs
+  fd
+  feh
+  firefox
+  fzf
+  gimp
+  git
+  github-cli
+  gnome-keyring
+  gnome-themes-extra
+  gparted
+  grub
+  htop
+  hwinfo
+  i3-wm
+  i3blocks
+  i3lock
+  i3status
+  ipython
+  jq
+  keepass
+  libhandy
+  libreoffice-fresh
+  linux
+  linux-firmware
+  lsd
+  lutris
+  maim
+  man-db
+  man-pages
+  mpv
+  neofetch
+  neovim
+  networkmanager
+  nodejs
+  npm
+  ntfs-3g
+  obs-studio
+  obsidian
+  openssh
+  p7zip
+  pacman-contrib
+  pcmanfm
+  pipewire
+  pipewire-pulse
+  prettyping
+  pv
+  pwgen
+  pyenv
+  python-poetry
+  rclone
+  reaper
+  rsync
+  scrcpy
+  scribus
+  scrot
+  signal-desktop
+  sl
+  speedtest-cli
+  sshfs
+  sudo
+  telegram-desktop
+  testdisk
+  texlive-binextra
+  texlive-langpolish
+  texlive-latex
+  tldr
+  tmux
+  toilet
+  translate-shell
+  transmission-gtk
+  tree
+  ttf-dejavu
+  ttf-hack-nerd
+  ttf-meslo-nerd
+  unzip
+  veracrypt
+  vim
+  vulkan-intel
+  wget
+  wine
+  xcape
+  xclip
+  xdotool
+  xorg-server
+  xorg-xclock
+  xorg-xev
+  xorg-xinit
+  xorg-xinput
+  xorg-xrandr
+  xss-lock
+  xterm
+  yarn
+  yt-dlp
+  zip
+  zsh
 )
 
 
