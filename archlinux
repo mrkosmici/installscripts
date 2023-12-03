@@ -194,27 +194,25 @@ btw-presetup () {
 
 btw-chroot-root () {
   checkroot
-  arch-chroot /mnt bash <<EOF
+  cat <<EOF > /mnt/root/run-as-root
   ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
   hwclock --systohc
   locale-gen
+  echo set hostname to archforce
   echo archforce >> /etc/hostname
   echo new root password
-  passwd
   systemctl enable NetworkManager
   grub-mkconfig -o /boot/grub/grub.cfg
   grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
   # add user
   useradd --create-home mrkosmici
   usermod -aG wheel mrkosmici
-
-  # install yay AUR helper
-  # btw-install-software
 EOF
+  echorun arch-chroot /mnt bash /root/run-as-root
 }
 
 btw-chroot-user() {
-  arch-chroot -u mrkosmici /mnt bash <<EOF
+  cat <<EOF > /mnt/home/mrkosmici/run-as-user
   git clone https://aur.archlinux.org/yay-bin.git
   cd yay-bin
   makepkg -si
@@ -231,6 +229,7 @@ btw-chroot-user() {
   git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
   git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 EOF
+  echorun arch-chroot -u mrkosmici /mnt bash /home/mrkosmici/run-as-user
 }
 
 makecapslockgreatagain() {
@@ -269,7 +268,7 @@ btw-install-games () { yay -S atlauncher minecraft-launcher lutris lib32-mesa li
 btw-install-media () { yay -S reaper gimp scribus }
 
 btw-setup-after-gh () {
-  arch-chroot -u mrkosmici /mnt bash <<EOF
+  arch-chroot -u mrkosmici /mnt bash -c <<EOF
   mkdir $HOME/reps
   mkdir $HOME/bin
   cd $HOME/reps
@@ -314,7 +313,7 @@ usage
 
 echorun btw-presetup
 echorun btw-chroot-root
-# btw-chroot-user
+echorun btw-chroot-user
 # btw-install
 # btw-install-aur
 # arch-chroot -u mrkosmici /mnt bash "gh auth login"
