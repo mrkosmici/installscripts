@@ -164,25 +164,24 @@ btw-presetup () {
   # This should be started first
   checkroot
   echorun loadkeys pl
-  echo Verifying boot mode...
+  echo "Verifying boot mode..."
   echorun cat /sys/firmware/efi/fw_platform_size
-  echo Checking internet...
+  echo "Checking internet..."
   echorun ip link
   echorun ping -c 1 archlinux.org
   echorun timedatectl
 
-  echo Ok, I will format disks
+  echo "Ok, I will format disks"
   echo root: $BTW_ROOT
   echo swap: $BTW_SWAP
   echo efi: $BTW_EFI
-  echo ok?
 
-  echo Formatting disks...
+  echo "Formatting disks..."
   echorun mkfs.ext4 $BTW_ROOT
   echorun mkswap $BTW_SWAP
-  echo Formatted
+  echo "Formatted"
 
-  echo Mounting drives...
+  echo "Mounting drives..."
   echorun mount $BTW_ROOT /mnt
   echorun mount $BTW_EFI --mkdir /mnt/boot
   echorun swapon $BTW_SWAP
