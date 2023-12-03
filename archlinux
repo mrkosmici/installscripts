@@ -172,7 +172,7 @@ btw-presetup () {
   echo swap: $BTW_SWAP
   echo efi:  $BTW_EFI
   echo ok?
-  read -n 1 -s -r -p "Press any key to continue"
+  read -p "Press any key to continue"
 
   echo Formatting disks...
   mkfs.ext4 $BTW_ROOT
@@ -186,13 +186,13 @@ btw-presetup () {
 
   echo going to
   echo pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
-  read -n 1 -s -r -p "Press any key to continue"
+  read -p "Press any key to continue"
 
   pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
   genfstab -U /mnt >> /mnt/etc/fstab
   echo "genfstab -U /mnt"
   genfstab -U /mnt
-  read -n 1 -s -r -p "Press any key to continue"
+  read -p "Press any key to continue"
 
   # turn on color in pacman
   sed -i 's/^#\(Color\)/\1/' /mnt/etc/pacman.conf
@@ -304,23 +304,23 @@ echo swap $BTW_SWAP
 echo efi $BTW_EFI
 
 echo next I will run btw-presetup
-read -n 1 -s -r -p "Press any key to continue"
+read -p "Press any key to continue"
 btw-presetup
 echo next I will run btw-chroot-root
-read -n 1 -s -r -p "Press any key to continue"
+read -p "Press any key to continue"
 btw-chroot-root
 echo next I will run btw-chroot-user 
-read -n 1 -s -r -p "Press any key to continue"
+read -p "Press any key to continue"
 btw-chroot-user
 echo next I will run btw-install
-read -n 1 -s -r -p "Press any key to continue"
+read -p "Press any key to continue"
 btw-install
 echo next I will run btw-install-aur
-read -n 1 -s -r -p "Press any key to continue"
+read -p "Press any key to continue"
 btw-install-aur
 echo "next I will chroot again"
-read -n 1 -s -r -p "Press any key to continue"
+read -p "Press any key to continue"
 arch-chroot -u mrkosmici /mnt bash "gh auth login"
 echo "gh working?"
-read -n 1 -s -r -p "Press any key to continue"
+read -p "Press any key to continue"
 btw-setup-after-gh
