@@ -30,7 +30,6 @@ packages =  (
   dmenu
   dmidecode
   dnsmasq
-  efibootmgr
   exfatprogs
   fd
   feh
@@ -42,7 +41,6 @@ packages =  (
   gnome-keyring
   gnome-themes-extra
   gparted
-  grub
   htop
   hwinfo
   i3-wm
@@ -186,7 +184,7 @@ btw-presetup () {
   echorun mount $BTW_ROOT /mnt
   echorun mount $BTW_EFI --mkdir /mnt/boot
   echorun swapon $BTW_SWAP
-  echorun pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git
+  echorun pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git grub efibootmgr
   echorun genfstab -U /mnt >> /mnt/etc/fstab
   echorun genfstab -U /mnt
 
@@ -315,7 +313,7 @@ EOF
 usage
 
 echorun btw-presetup
-# btw-chroot-root
+echorun btw-chroot-root
 # btw-chroot-user
 # btw-install
 # btw-install-aur
