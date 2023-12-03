@@ -15,7 +15,12 @@ echo root $BTW_ROOT
 echo swap $BTW_SWAP
 echo efi $BTW_EFI
 
-function btw-first-run-from-live () {
+checkroot() {
+  (( EUID == 0 )) || die 'need root privileges'
+}
+
+function btw-first-run-from-live () { 
+  checkroot
   echo Setting keyboard to pl
   loadkeys pl
   echo Verifying boot mode...
@@ -40,6 +45,8 @@ function btw-first-run-from-live () {
 }
 
 function btw-inside-chroot () {
+  checkroot
+
   ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
   hwclock --systohc
   locale-gen
@@ -51,8 +58,9 @@ function btw-inside-chroot () {
 }
 
 # After restarting inside new system
-function btw-root-setup () {
-  # run as root
+function btw-root-setup () { 
+  checkroot
+
   useradd --create-home mrkosmici
   usermod -aG wheel mrkosmici
   # install yay AUR helper
