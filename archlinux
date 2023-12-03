@@ -6,6 +6,17 @@
 # Usage
 #
 # BTW_ROOT=/dev/nvme0n1p7 BTW_SWAP=/dev/nvme0n1p6 BTW_EFI=/dev/nvme0n1p1 archlinux
+#
+# Steps
+#
+# 1. Get info about installation
+# 2. Partition
+# 3. Install packages
+# 4. Run root commands in chroot
+# 5. Run user commands in chroot
+# 6. Install aur helper
+# 7. Install aur packages
+# 8. Make capslock great again
 
 echorun() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] run: $@"
@@ -207,13 +218,14 @@ btw-chroot-root () {
   locale-gen
   echo set hostname to archforce
   echo archforce >> /etc/hostname
-  echo new root password
   systemctl enable NetworkManager
   grub-mkconfig -o /boot/grub/grub.cfg
   grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
   # add user
   useradd --create-home mrkosmici
   usermod -aG wheel mrkosmici
+  sed -i 's/# %wheel ALL/%wheel ALL/' /etc/sudoers
+
 EOF
   
   echorun arch-chroot /mnt bash /root/run-as-root
@@ -221,10 +233,12 @@ EOF
 
 btw-chroot-user() {
   cat <<EOF > /mnt/home/mrkosmici/run-as-user
+  cd $HOME
   git clone https://aur.archlinux.org/yay-bin.git
-  cd yay-bin
+  cd $HOME/yay-bin
   makepkg -si
-  rm -r ../yay-bin
+  cd $HOME
+  rm -r yay-bin
 
   # install ohmyzsh
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
