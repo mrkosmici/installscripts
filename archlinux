@@ -157,6 +157,7 @@ aurpackages = (
 )
 
 checkroot() {
+  echo "Checking root..."
   (( EUID == 0 )) || die 'need root privileges'
 }
 
@@ -208,14 +209,9 @@ btw-chroot-root () {
   # add user
   useradd --create-home mrkosmici
   usermod -aG wheel mrkosmici
-  echo new password for you give me
-  passwd mrkosmici
 
   # install yay AUR helper
   # btw-install-software
-  # sudo -Hu mrkosmici btw-user-setup
-  # sudo -Hu mrkosmici gh auth login
-  # sudo -Hu mrkosmici btw-run-after-gh
 EOF
 }
 
@@ -275,20 +271,22 @@ btw-install-games () { yay -S atlauncher minecraft-launcher lutris lib32-mesa li
 btw-install-media () { yay -S reaper gimp scribus }
 
 btw-setup-after-gh () {
-  echorun mkdir $HOME/reps
-  echorun mkdir $HOME/bin
-  echorun cd $HOME/reps
-  echorun gh repo clone scripts
-  echorun gh repo clone dotfiles
-  echorun cd $HOME/reps/dotfiles
-  echorun git switch arch-t480s
-  echorun chmod +x $HOME/reps/dotfiles/install
-  echorun $HOME/reps/dotfiles/install
-  echorun ln -s /home/mrkosmici/reps/scripts/add_daily_note.sh /home/mrkosmici/bin/daily
-  echorun ln -s /home/mrkosmici/reps/scripts/conky-i3bar /home/mrkosmici/bin/conky-i3bar
-  echorun ln -s /home/mrkosmici/reps/scripts/set-theme /home/mrkosmici/bin/set-theme
-  echorun ln -s /home/mrkosmici/reps/scripts/toggler.sh /home/mrkosmici/bin/toggler
-  echorun ln -s /home/mrkosmici/reps/scripts/volumelimiter /home/mrkosmici/bin/volumelimiter
+  arch-chroot -u mrkosmici /mnt bash <<EOF
+  mkdir $HOME/reps
+  mkdir $HOME/bin
+  cd $HOME/reps
+  gh repo clone scripts
+  gh repo clone dotfiles
+  cd $HOME/reps/dotfiles
+  git switch arch-t480s
+  chmod +x $HOME/reps/dotfiles/install
+  $HOME/reps/dotfiles/install
+  ln -s /home/mrkosmici/reps/scripts/add_daily_note.sh /home/mrkosmici/bin/daily
+  ln -s /home/mrkosmici/reps/scripts/conky-i3bar /home/mrkosmici/bin/conky-i3bar
+  ln -s /home/mrkosmici/reps/scripts/set-theme /home/mrkosmici/bin/set-theme
+  ln -s /home/mrkosmici/reps/scripts/toggler.sh /home/mrkosmici/bin/toggler
+  ln -s /home/mrkosmici/reps/scripts/volumelimiter /home/mrkosmici/bin/volumelimiter
+EOF
 }
 
 echo running as $(whoami)
@@ -316,10 +314,14 @@ EOF
 
 usage
 
-btw-presetup
+echorun btw-presetup
 # btw-chroot-root
 # btw-chroot-user
 # btw-install
 # btw-install-aur
 # arch-chroot -u mrkosmici /mnt bash "gh auth login"
 # btw-setup-after-gh
+
+  # sudo -Hu mrkosmici btw-user-setup
+  # sudo -Hu mrkosmici gh auth login
+  # sudo -Hu mrkosmici btw-run-after-gh
