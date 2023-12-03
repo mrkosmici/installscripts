@@ -326,7 +326,7 @@ echorun btw-chroot-root
 echorun btw-chroot-user
 echorun makecapslockgreatagain
 echorun btw-install
-echorun btw-install-aur
+# echorun btw-install-aur
 # arch-chroot -u mrkosmici /mnt bash "gh auth login"
 # echorun btw-setup-after-gh
 
