@@ -23,7 +23,9 @@ echorun() {
   "$@"
 }
 
-packages =  (
+USERNAME=mrkosmici
+
+packages=(
   acpi
   aisleriot
   alacritty
@@ -138,8 +140,7 @@ packages =  (
   zsh
 )
 
-
-aurpackages = (
+aurpackages=(
   alacritty-theme
   alacritty-themes
   atlauncher
@@ -212,7 +213,7 @@ btw-presetup () {
 
 btw-chroot-root () {
   checkroot
-  cat <<EOF > /mnt/root/run-as-root
+  cat <<EOF > /mnt/var/tmp/run-as-root
   #!/bin/bash
   # set time
   ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
@@ -225,31 +226,26 @@ btw-chroot-root () {
   grub-mkconfig -o /boot/grub/grub.cfg
   grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
   # add user
-  useradd --create-home mrkosmici
-  usermod -aG wheel mrkosmici
-  # add mrkosmici to sudoers
+  useradd --create-home $USERNAME
+  usermod -aG wheel $USERNAME
+  # add user to sudoers
   sed -i 's/# %wheel ALL/%wheel ALL/' /etc/sudoers
 EOF
   
-  echorun arch-chroot /mnt bash /root/run-as-root
+  echorun arch-chroot /mnt bash /var/tmp/run-as-root
 }
 
 btw-chroot-user() {
-  cat <<EOF > /mnt/home/mrkosmici/run-as-user
+  cat <<EOF > /mnt/var/tmp/run-as-user
   #!/bin/bash
   whoami
-  HOME=/home/mrkosmici
-  cd /home/mrkosmici/
+  HOME=/home/$USERNAME
+  cd \$HOME
   git clone https://aur.archlinux.org/yay-bin.git
-  cd /home/mrkosmici/yay-bin
+  cd \$HOME/yay-bin
   makepkg -si
-  cd /home/mrkosmici/
+  cd \$HOME
   rm -rf yay-bin
-
-  echo no escape, home var below:
-  echo $HOME
-  echo escape
-  echo \$HOME
 
   # install ohmyzsh
   sh -c "\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -263,7 +259,7 @@ btw-chroot-user() {
   git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git \${ZSH_CUSTOM:-\$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
   git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git \${ZSH_CUSTOM:-\$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 EOF
-  echorun arch-chroot -u mrkosmici /mnt bash /home/mrkosmici/run-as-user
+  echorun arch-chroot -u $USERNAME /mnt bash /var/tmp/run-as-user
 }
 
 makecapslockgreatagain() {
@@ -296,26 +292,27 @@ EOF
 }
 
 btw-install () { echorun pacstrap /mnt ${packages[@]} }
-btw-install-aur() { echorun arch-chroot -u mrkosmici /mnt bash yay -S --noconfirm "${aurpackages[@]}" }
+btw-install-aur() { echorun arch-chroot -u $USERNAME /mnt bash yay -S --noconfirm "${aurpackages[@]}" }
 
 btw-install-games () { yay -S atlauncher minecraft-launcher lutris lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-intel }
 btw-install-media () { yay -S reaper gimp scribus }
 
 btw-setup-after-gh () {
-  cat <<EOF > /mnt/home/mrkosmici/run-after-gh
-  mkdir /home/mrkosmici/{reps,bin}
-  cd /home/mrkosmici/reps
+  cat <<EOF > /mnt/home/$USERNAME/setup-gh
+  HOME=/home/$USERNAME
+  mkdir \$HOME/{reps,bin}
+  cd \$HOME/reps
   gh repo clone scripts
   gh repo clone dotfiles
-  cd /home/mrkosmici/reps/dotfiles
+  cd \$HOME/reps/dotfiles
   git switch arch-t480s
-  chmod +x /home/mrkosmici/reps/dotfiles/install
-  /home/mrkosmici/reps/dotfiles/install
-  ln -s /home/mrkosmici/reps/scripts/add_daily_note.sh /home/mrkosmici/bin/daily
-  ln -s /home/mrkosmici/reps/scripts/conky-i3bar /home/mrkosmici/bin/conky-i3bar
-  ln -s /home/mrkosmici/reps/scripts/set-theme /home/mrkosmici/bin/set-theme
-  ln -s /home/mrkosmici/reps/scripts/toggler.sh /home/mrkosmici/bin/toggler
-  ln -s /home/mrkosmici/reps/scripts/volumelimiter /home/mrkosmici/bin/volumelimiter
+  chmod +x \$HOME/reps/dotfiles/install
+  \$HOME/reps/dotfiles/install
+  ln -s \$HOME/reps/scripts/add_daily_note.sh \$HOME/bin/daily
+  ln -s \$HOME/reps/scripts/conky-i3bar \$HOME/bin/conky-i3bar
+  ln -s \$HOME/reps/scripts/set-theme \$HOME/bin/set-theme
+  ln -s \$HOME/reps/scripts/toggler.sh \$HOME/bin/toggler
+  ln -s \$HOME/reps/scripts/volumelimiter \$HOME/bin/volumelimiter
 EOF
 }
 
@@ -339,7 +336,7 @@ btw-chroot-user
 makecapslockgreatagain
 btw-install
 btw-install-aur
-arch-chroot -u mrkosmici /mnt bash "gh auth login"
+arch-chroot -u $USERNAME /mnt bash "gh auth login"
 btw-setup-after-gh
 EOF
 }
@@ -351,10 +348,10 @@ echorun btw-chroot-root
 echorun btw-chroot-user
 echorun makecapslockgreatagain
 echorun btw-install
-# echorun btw-install-aur
-# arch-chroot -u mrkosmici /mnt bash "gh auth login"
-# echorun btw-setup-after-gh
+echorun btw-install-aur
+arch-chroot -u $USERNAME /mnt bash "gh auth login"
+echorun btw-setup-after-gh
 
-  # sudo -Hu mrkosmici btw-user-setup
-  # sudo -Hu mrkosmici gh auth login
-  # sudo -Hu mrkosmici btw-run-after-gh
+  # sudo -Hu $USERNAME btw-user-setup
+  # sudo -Hu $USERNAME gh auth login
+  # sudo -Hu $USERNAME btw-run-after-gh
