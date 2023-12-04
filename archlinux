@@ -349,8 +349,8 @@ echorun btw-chroot-user
 echorun makecapslockgreatagain
 echorun btw-install
 echorun btw-install-aur
-arch-chroot -u $USERNAME /mnt bash "gh auth login"
-echorun btw-setup-after-gh
+#arch-chroot -u $USERNAME /mnt bash "gh auth login"
+#echorun btw-setup-after-gh
 
   # sudo -Hu $USERNAME btw-user-setup
   # sudo -Hu $USERNAME gh auth login
