@@ -203,7 +203,7 @@ btw-presetup () {
 
   echo "Pacstrapping basic packages"
   sleep 3
-  echorun pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git grub efibootmgr
+  echorun pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git grub efibootmgr github-cli
   echorun genfstab -U /mnt >> /mnt/etc/fstab
   echorun genfstab -U /mnt
 
