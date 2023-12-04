@@ -213,8 +213,11 @@ btw-presetup () {
 btw-chroot-root () {
   checkroot
   cat <<EOF > /mnt/root/run-as-root
+  #!/bin/bash
+  # set time
   ln -sf /usr/share/zoneinfo/Europe/Warsaw /etc/localtime
   hwclock --systohc
+  # generate locales
   locale-gen
   echo set hostname to archforce
   echo archforce >> /etc/hostname
@@ -224,8 +227,8 @@ btw-chroot-root () {
   # add user
   useradd --create-home mrkosmici
   usermod -aG wheel mrkosmici
+  # add mrkosmici to sudoers
   sed -i 's/# %wheel ALL/%wheel ALL/' /etc/sudoers
-
 EOF
   
   echorun arch-chroot /mnt bash /root/run-as-root
@@ -235,12 +238,18 @@ btw-chroot-user() {
   cat <<EOF > /mnt/home/mrkosmici/run-as-user
   #!/bin/bash
   whoami
+  HOME=/home/mrkosmici
   cd /home/mrkosmici/
   git clone https://aur.archlinux.org/yay-bin.git
   cd /home/mrkosmici/yay-bin
   makepkg -si
   cd /home/mrkosmici/
   rm -rf yay-bin
+
+  echo no escape, home var below:
+  echo $HOME
+  echo escape
+  echo \$HOME
 
   # install ohmyzsh
   sh -c "\$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -249,10 +258,10 @@ btw-chroot-user() {
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \${ZSH_CUSTOM:-\$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
   sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
   # Install Oh My Zsh plugins
-  git clone --depth=1 https://github.com/romkatv/zsh-prompt-benchmark.git \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-prompt-benchmark
-  git clone --depth=1 https://github.com/olets/zsh-abbr.git \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-abbr
-  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+  git clone --depth=1 https://github.com/romkatv/zsh-prompt-benchmark.git \${ZSH_CUSTOM:-\$HOME/.oh-my-zsh/custom}/plugins/zsh-prompt-benchmark
+  git clone --depth=1 https://github.com/olets/zsh-abbr.git \${ZSH_CUSTOM:-\$HOME/.oh-my-zsh/custom}/plugins/zsh-abbr
+  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git \${ZSH_CUSTOM:-\$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git \${ZSH_CUSTOM:-\$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 EOF
   echorun arch-chroot -u mrkosmici /mnt bash /home/mrkosmici/run-as-user
 }
@@ -294,15 +303,14 @@ btw-install-media () { yay -S reaper gimp scribus }
 
 btw-setup-after-gh () {
   cat <<EOF > /mnt/home/mrkosmici/run-after-gh
-  mkdir \$HOME/reps
-  mkdir \$HOME/bin
-  cd \$HOME/reps
+  mkdir /home/mrkosmici/{reps,bin}
+  cd /home/mrkosmici/reps
   gh repo clone scripts
   gh repo clone dotfiles
-  cd \$HOME/reps/dotfiles
+  cd /home/mrkosmici/reps/dotfiles
   git switch arch-t480s
-  chmod +x \$HOME/reps/dotfiles/install
-  \$HOME/reps/dotfiles/install
+  chmod +x /home/mrkosmici/reps/dotfiles/install
+  /home/mrkosmici/reps/dotfiles/install
   ln -s /home/mrkosmici/reps/scripts/add_daily_note.sh /home/mrkosmici/bin/daily
   ln -s /home/mrkosmici/reps/scripts/conky-i3bar /home/mrkosmici/bin/conky-i3bar
   ln -s /home/mrkosmici/reps/scripts/set-theme /home/mrkosmici/bin/set-theme
@@ -338,11 +346,11 @@ EOF
 
 usage
 
-# echorun btw-presetup
-# echorun btw-chroot-root
-# echorun btw-chroot-user
-# echorun makecapslockgreatagain
-# echorun btw-install
+echorun btw-presetup
+echorun btw-chroot-root
+echorun btw-chroot-user
+echorun makecapslockgreatagain
+echorun btw-install
 # echorun btw-install-aur
 # arch-chroot -u mrkosmici /mnt bash "gh auth login"
 # echorun btw-setup-after-gh
