@@ -201,9 +201,8 @@ btw-chroot-root () {
   grub-mkconfig -o /boot/grub/grub.cfg
   grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
   # add user
-  useradd --create-home $new_user
+  useradd --password "$(openssl passwd -6 asdf)" --create-home $new_user
   usermod -aG wheel $new_user
-  echo "$new_user:asdf" | chpasswd
   usermod -s /bin/zsh $new_user
   # add user to sudoers
   sed -i 's/# %wheel ALL/%wheel ALL/' /etc/sudoers
