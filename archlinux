@@ -220,7 +220,7 @@ btw-chroot-user() {
   cd \$HOME
   git clone https://aur.archlinux.org/yay-bin.git
   cd \$HOME/yay-bin
-  makepkg -si
+  yes | makepkg -si
   cd \$HOME
   rm -rf yay-bin
 
@@ -330,6 +330,9 @@ echorun btw-install-aur
 echorun btw-setup-gh 
 
 echo unmount and reboot now
+sleep 30
+umount -R /mnt
+reboot now
 
   # sudo -Hu $new_user btw-user-setup
   # sudo -Hu $new_user gh auth login
