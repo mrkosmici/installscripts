@@ -18,7 +18,7 @@
 # 7. Install aur packages
 # 8. Make capslock great again
 
-echorun()
+echorun() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] run: $@"
   "$@"
 }
@@ -166,7 +166,7 @@ btw-presetup () {
 
   echo "Formatting disks..."
   sleep 3
-  echorun mkfs.ext4 $BTW_ROOT
+  echorun yes | mkfs.ext4 $BTW_ROOT
   echorun mkswap $BTW_SWAP
   echo "Formatted"
 
