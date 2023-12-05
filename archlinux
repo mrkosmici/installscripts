@@ -328,8 +328,10 @@ echorun btw-install-aur
 #arch-chroot -u $new_user /mnt bash "gh auth login"
 echorun btw-setup-gh 
 
-echo unmount and reboot now
-sleep 30
+echo change rootvpasswd
+arch-chroot /mnt passwd
+echo will restart in 5 min
+sleep
 umount -R /mnt
 reboot now
 
