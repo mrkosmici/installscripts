@@ -18,12 +18,12 @@
 # 7. Install aur packages
 # 8. Make capslock great again
 
-echorun() {
+echorun()
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] run: $@"
   "$@"
 }
 
-USERNAME=mrkosmici
+new_user=mrkosmici
 
 
 basic=(base base-devel linux linux-firmware vim networkmanager zsh git grub efibootmgr github-cli)
@@ -201,8 +201,8 @@ btw-chroot-root () {
   grub-mkconfig -o /boot/grub/grub.cfg
   grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
   # add user
-  useradd --create-home $USERNAME
-  usermod -aG wheel $USERNAME
+  useradd --create-home $new_user
+  usermod -aG wheel $new_user
   # add user to sudoers
   sed -i 's/# %wheel ALL/%wheel ALL/' /etc/sudoers
 EOF
@@ -214,7 +214,7 @@ btw-chroot-user() {
   cat <<EOF > /mnt/var/tmp/run-as-user
   #!/bin/bash
   whoami
-  HOME=/home/$USERNAME
+  HOME=/home/$new_user
   cd \$HOME
   git clone https://aur.archlinux.org/yay-bin.git
   cd \$HOME/yay-bin
@@ -234,7 +234,7 @@ btw-chroot-user() {
   git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git \${ZSH_CUSTOM:-\$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
   git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git \${ZSH_CUSTOM:-\$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 EOF
-  echorun arch-chroot -u $USERNAME /mnt bash /var/tmp/run-as-user
+  echorun arch-chroot -u $new_user /mnt bash /var/tmp/run-as-user
 }
 
 makecapslockgreatagain() {
@@ -267,12 +267,12 @@ EOF
 }
 
 btw-install () { echorun pacstrap /mnt ${packages[@]} }
-btw-install-aur() { echorun arch-chroot -u $USERNAME /mnt bash yay -S --noconfirm "${aurpackages[@]}" }
+btw-install-aur() { echorun arch-chroot -u $new_user /mnt bash yay -S --noconfirm "${aurpackages[@]}" }
 
 btw-setup-gh () {
   export TOKEN=$(</var/tmp/token)
   cat <<EOF > /mnt/var/tmp/setup-gh
-  HOME=/home/$USERNAME
+  HOME=/home/$new_user
   mkdir \$HOME/{reps,bin}
   cd \$HOME/reps
   export GH_TOKEN=$TOKEN
@@ -288,7 +288,7 @@ btw-setup-gh () {
   ln -s \$HOME/reps/scripts/toggler.sh \$HOME/bin/toggler
   ln -s \$HOME/reps/scripts/volumelimiter \$HOME/bin/volumelimiter
 EOF
-  echorun arch-chroot -u $USERNAME /mnt bash /var/tmp/setup-gh
+  echorun arch-chroot -u $new_user /mnt bash /var/tmp/setup-gh
 }
 
 echo running as $(whoami)
@@ -311,7 +311,7 @@ btw-chroot-user
 makecapslockgreatagain
 btw-install
 btw-install-aur
-arch-chroot -u $USERNAME /mnt bash "gh auth login"
+arch-chroot -u $new_user /mnt bash "gh auth login"
 btw-setup-gh
 EOF
 }
@@ -324,9 +324,9 @@ echorun btw-chroot-user
 echorun makecapslockgreatagain
 echorun btw-install
 echorun btw-install-aur
-#arch-chroot -u $USERNAME /mnt bash "gh auth login"
+#arch-chroot -u $new_user /mnt bash "gh auth login"
 echorun btw-setup-gh 
 
-  # sudo -Hu $USERNAME btw-user-setup
-  # sudo -Hu $USERNAME gh auth login
-  # sudo -Hu $USERNAME btw-run-after-gh
+  # sudo -Hu $new_user btw-user-setup
+  # sudo -Hu $new_user gh auth login
+  # sudo -Hu $new_user btw-run-after-gh
