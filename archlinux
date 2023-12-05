@@ -269,12 +269,13 @@ EOF
 btw-install () { echorun pacstrap /mnt ${packages[@]} }
 btw-install-aur() { echorun arch-chroot -u $USERNAME /mnt bash yay -S --noconfirm "${aurpackages[@]}" }
 
-
-btw-setup-after-gh () {
-  cat <<EOF > /mnt/home/$USERNAME/setup-gh
+btw-setup-gh () {
+  TOKEN=$(</var/tmp/token)
+  cat <<EOF > /mnt/var/tmp/setup-gh
   HOME=/home/$USERNAME
   mkdir \$HOME/{reps,bin}
   cd \$HOME/reps
+  export GH_TOKEN=$TOKEN
   gh repo clone scripts
   gh repo clone dotfiles
   cd \$HOME/reps/dotfiles
@@ -287,6 +288,7 @@ btw-setup-after-gh () {
   ln -s \$HOME/reps/scripts/toggler.sh \$HOME/bin/toggler
   ln -s \$HOME/reps/scripts/volumelimiter \$HOME/bin/volumelimiter
 EOF
+  echorun arch-chroot -u $USERNAME /mnt bash /var/tmp/setup-gh
 }
 
 echo running as $(whoami)
@@ -310,7 +312,7 @@ makecapslockgreatagain
 btw-install
 btw-install-aur
 arch-chroot -u $USERNAME /mnt bash "gh auth login"
-btw-setup-after-gh
+btw-setup-gh
 EOF
 }
 
@@ -323,7 +325,7 @@ echorun makecapslockgreatagain
 echorun btw-install
 echorun btw-install-aur
 #arch-chroot -u $USERNAME /mnt bash "gh auth login"
-#echorun btw-setup-after-gh
+echorun btw-setup-gh 
 
   # sudo -Hu $USERNAME btw-user-setup
   # sudo -Hu $USERNAME gh auth login
