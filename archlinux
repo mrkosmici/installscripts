@@ -203,6 +203,8 @@ btw-chroot-root () {
   # add user
   useradd --create-home $new_user
   usermod -aG wheel $new_user
+  echo "$new_user:asdf" | chpasswd
+  usermod -s /bin/zsh $new_user
   # add user to sudoers
   sed -i 's/# %wheel ALL/%wheel ALL/' /etc/sudoers
 EOF
@@ -326,6 +328,8 @@ echorun btw-install
 echorun btw-install-aur
 #arch-chroot -u $new_user /mnt bash "gh auth login"
 echorun btw-setup-gh 
+
+echo unmount and reboot now
 
   # sudo -Hu $new_user btw-user-setup
   # sudo -Hu $new_user gh auth login
