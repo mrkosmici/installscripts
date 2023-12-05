@@ -25,21 +25,18 @@ echorun() {
 
 USERNAME=mrkosmici
 
+
+basic=(base base-devel linux linux-firmware vim networkmanager zsh git grub efibootmgr github-cli)
+
 packages=(
   acpi
   aisleriot
   alacritty
-  android-tools
-  base
-  base-devel
-  bluez
-  bluez-utils
+  bluez bluez-utils
   brightnessctl
-  chromium
-  cmatrix
+  cowsay cmatrix
   cmus
   conky
-  cowsay
   dmenu
   dmidecode
   dnsmasq
@@ -48,39 +45,18 @@ packages=(
   feh
   firefox
   fzf
-  gimp
-  git
-  github-cli
   gnome-keyring
   gnome-themes-extra
-  gparted
   htop
   hwinfo
-  i3-wm
-  i3blocks
-  i3lock
-  i3status
-  ipython
+  i3-wm i3blocks i3lock i3status
   jq
-  keepass
   libhandy
-  libreoffice-fresh
-  linux
-  linux-firmware
   lsd
-  lutris
-  maim
-  man-db
-  man-pages
+  man-db man-pages
   mpv
   neofetch
-  neovim
-  networkmanager
-  nodejs
-  npm
   ntfs-3g
-  obs-studio
-  obsidian
   openssh
   p7zip
   pacman-contrib
@@ -90,80 +66,79 @@ packages=(
   prettyping
   pv
   pwgen
-  pyenv
-  python-poetry
   rclone
-  reaper
   rsync
-  scrcpy
-  scribus
   scrot
-  signal-desktop
-  sl
   speedtest-cli
   sshfs
   sudo
-  telegram-desktop
-  testdisk
-  texlive-binextra
-  texlive-langpolish
-  texlive-latex
   tldr
   tmux
-  toilet
   translate-shell
-  transmission-gtk
   tree
-  ttf-dejavu
-  ttf-hack-nerd
   ttf-meslo-nerd
   unzip
-  veracrypt
-  vim
-  vulkan-intel
   wget
-  wine
   xcape
   xclip
   xdotool
-  xorg-server
-  xorg-xclock
-  xorg-xev
-  xorg-xinit
-  xorg-xinput
-  xorg-xrandr
+  xorg-server xorg-xclock xorg-xev xorg-xinit xorg-xinput xorg-xrandr
   xss-lock
   xterm
-  yarn
   yt-dlp
   zip
-  zsh
+  neovim nodejs npm ipython python-poetry pyenv yarn
 )
 
+
+think=(veracrypt
+  toilet
+  testdisk
+  transmission-gtk
+  gparted
+  scrcpy
+  chromium
+  ttf-dejavu
+  ttf-hack-nerd
+  telegram-desktop
+  signal-desktop
+  android-tools
+  lutris
+  maim
+  libreoffice-fresh
+  keepass
+  obsidian
+  texlive-binextra
+  texlive-langpolish
+  texlive-latex
+  obs-studio)
+
+  games=(atlauncher minecraft-launcher lutris lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-intel vulkan-intel sl)
+media=(reaper gimp scribus)
+wine=(wine)
 aurpackages=(
   alacritty-theme
   alacritty-themes
-  atlauncher
-  clockify-cli-bin
-  clockify-desktop
   debtap
   gtypist
-  heroku-cli-bin
-  minecraft-launcher
   montserrat-otf
   ngrok
-  octopi
   otf-raleway
-  pandoc-bin
+  vtop
+  yewtube-git
+  youtube-search-python-git
+)
+aurthink=(
   pixiecore-git
+  pandoc-bin
   python-backcall
   python-pafy-git
-  vtop
   woeusb
-  yay-bin
-  yewtube-git
+  clockify-cli-bin
+  clockify-desktop
   youtube-dl
-  youtube-search-python-git
+  octopi
+  heroku-cli-bin
 )
 
 checkroot() {
@@ -203,7 +178,7 @@ btw-presetup () {
 
   echo "Pacstrapping basic packages"
   sleep 3
-  echorun pacstrap -K /mnt base base-devel linux linux-firmware vim networkmanager zsh git grub efibootmgr github-cli
+  echorun pacstrap -K /mnt ${basic[@]}
   echorun genfstab -U /mnt >> /mnt/etc/fstab
   echorun genfstab -U /mnt
 
@@ -294,8 +269,6 @@ EOF
 btw-install () { echorun pacstrap /mnt ${packages[@]} }
 btw-install-aur() { echorun arch-chroot -u $USERNAME /mnt bash yay -S --noconfirm "${aurpackages[@]}" }
 
-btw-install-games () { yay -S atlauncher minecraft-launcher lutris lib32-mesa lib32-vulkan-icd-loader lib32-vulkan-intel }
-btw-install-media () { yay -S reaper gimp scribus }
 
 btw-setup-after-gh () {
   cat <<EOF > /mnt/home/$USERNAME/setup-gh
