@@ -27,25 +27,30 @@ new_user=mrkosmici
 
 
 basic=(base base-devel linux linux-firmware vim networkmanager zsh git grub efibootmgr github-cli)
-
+cli=(
+  cmus
+  bluez bluez-utils
+  openssh
+  dmidecode
+  exfatprogs
+  fd
+  fzf
+  gnome-keyring
+  neovim nodejs npm ipython python-poetry pyenv yarn
+)
+media=
+  mpv
 packages=(
   acpi
   aisleriot
   alacritty
-  bluez bluez-utils
   brightnessctl
   cowsay cmatrix
-  cmus
   conky
   dmenu
-  dmidecode
   dnsmasq
-  exfatprogs
-  fd
   feh
   firefox
-  fzf
-  gnome-keyring
   gnome-themes-extra
   htop
   hwinfo
@@ -54,10 +59,8 @@ packages=(
   libhandy
   lsd
   man-db man-pages
-  mpv
   neofetch
   ntfs-3g
-  openssh
   p7zip
   pacman-contrib
   pcmanfm
@@ -82,16 +85,15 @@ packages=(
   xcape
   xclip
   xdotool
-  xorg-server xorg-xclock xorg-xev xorg-xinit xorg-xinput xorg-xrandr
+  xorg-server xorg-xclock xorg-xev xorg-xinit xorg-xinput xorg-xrandr xorg-xset
   xss-lock
-  xterm
   yt-dlp
   zip
-  neovim nodejs npm ipython python-poetry pyenv yarn
 )
 
 
 think=(veracrypt
+  xterm
   toilet
   testdisk
   transmission-gtk
